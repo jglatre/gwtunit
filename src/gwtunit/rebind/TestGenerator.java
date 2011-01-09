@@ -43,21 +43,26 @@ public class TestGenerator extends Generator {
 					source.println("});");
 				}
 				source.println("}");
+			
+				generateNewInstanceMethod(source, className);
 				
-				source.println("public TestCase newInstance() {");
-				source.println("   return new " + className + "();");
-				source.println("}");
 				source.commit( logger );
 			}
 			return type.getParameterizedQualifiedSourceName() + "Extended";
 		} 
 		catch (NotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
 
+	
+	private void generateNewInstanceMethod(SourceWriter source, String className) {
+		source.println("public TestCase newInstance() {");
+		source.println("   return new " + className + "();");
+		source.println("}");		
+	}
+	
 	
 	private Iterable<JMethod> getTestMethods(JClassType type) {
 		List<JMethod> methods = new ArrayList<JMethod>();
