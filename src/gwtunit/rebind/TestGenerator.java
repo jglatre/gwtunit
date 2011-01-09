@@ -33,18 +33,9 @@ public class TestGenerator extends Generator {
 			PrintWriter writer = context.tryCreate( logger, packageName, className );
 			if (writer != null) {
 				SourceWriter source = composer.createSourceWriter( context, writer );
-				
-				source.println("public " + className + "() {");
-				for ( JMethod method : getTestMethods(type) ) {
-					source.println("addTestMethod(\"" + method.getName() + "\", new TestMethod<" + className + ">() {");
-					source.println("   public void invoke(" + className + " target) {");
-					source.println("      target." + method.getName() + "();");
-					source.println("   }");
-					source.println("});");
-				}
-				source.println("}");
-			
-				generateNewInstanceMethod(source, className);
+		
+				generateConstructor( source, className, type );
+				generateNewInstanceMethod( source, className );
 				
 				source.commit( logger );
 			}
@@ -56,6 +47,19 @@ public class TestGenerator extends Generator {
 		}
 	}
 
+	
+	private void generateConstructor(SourceWriter source, String className, JClassType type) {
+		source.println("public " + className + "() {");
+		for ( JMethod method : getTestMethods(type) ) {
+			source.println("addTestMethod(\"" + method.getName() + "\", new TestMethod<" + className + ">() {");
+			source.println("   public void invoke(" + className + " target) {");
+			source.println("      target." + method.getName() + "();");
+			source.println("   }");
+			source.println("});");
+		}
+		source.println("}");		
+	}
+	
 	
 	private void generateNewInstanceMethod(SourceWriter source, String className) {
 		source.println("public TestCase newInstance() {");
