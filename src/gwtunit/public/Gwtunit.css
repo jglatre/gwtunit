@@ -1,0 +1,12 @@
+
+.test-ok {
+	color: green;
+}
+
+.test-failure {
+	color: red;
+}
+
+.test-error {
+	color: black;
+}
