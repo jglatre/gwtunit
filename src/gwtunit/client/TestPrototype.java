@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 
 public interface TestPrototype {
 
+	String getTestClassName();
 	TestCase newInstance();
 	Iterable<String> getTestMethodNames();
 	TestMethod<?> getTestMethod(String name);
