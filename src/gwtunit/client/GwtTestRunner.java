@@ -1,6 +1,8 @@
 package gwtunit.client;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -85,31 +87,37 @@ public abstract class GwtTestRunner implements EntryPoint {
 
 	
 	static class TestResultsPanel extends VerticalPanel implements TestListener {
-		Label current;
+		private Map<String, Label> results = new HashMap<String, Label>();
 		
 		public void startTest(Test test) {
-			if (test instanceof TestCase) {
-				current = new Label( test.toString() );
-				current.setStyleName("test-ok");
-				add(current);
-			}
+			getResultLabel(test);
 		}		
 
 		public void endTest(Test test) {
 		}
 
 		public void addError(Test test, Throwable t) {
-			if (current != null) {
-				current.setText( current.getText() + ": " + t.getMessage() );
-				current.setStyleName("test-error");
-			}
+			Label result = getResultLabel(test);
+			result.setText( result.getText() + ": " + t.getMessage() );
+			result.setStyleName("test-error");
 		}
 
 		public void addFailure(Test test, AssertionFailedError t) {
-			if (current != null) {
-				current.setText( current.getText() + ": " + t.getMessage() );
-				current.setStyleName("test-failure");
+			Label result = getResultLabel(test);
+			result.setText( result.getText() + ": " + t.getMessage() );
+			result.setStyleName("test-failure");
+		}
+		
+		
+		protected Label getResultLabel(Test test) {
+			Label result = results.get(test.toString());
+			if (result == null) {
+				result = new Label( test.toString() );	
+				result.setStyleName("test-ok");
+				add( result );
+				results.put( test.toString(), result );
 			}
+			return result;
 		}
 	}
 }
