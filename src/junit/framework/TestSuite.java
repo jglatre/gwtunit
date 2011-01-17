@@ -53,25 +53,16 @@ public class TestSuite implements Test {
 	/**
 	 * Returns a test which will fail and log a warning message.
 	 */
-//	public static Test warning(final String message) {
-//		return new TestCase("warning") {
-//			@Override
-//			protected void runTest() {
-//				fail(message);
-//			}
-//		};
-//	}
+	public static Test warning(final String message) {
+		return new TestCase("warning") {
+			@Override
+			protected void runTest() {
+				fail(message);
+			}
+		};
+	}
 
-	/**
-	 * Converts the stack trace into a string
-	 */
-//	private static String exceptionToString(Throwable t) {
-//		StringWriter stringWriter= new StringWriter();
-//		PrintWriter writer= new PrintWriter(stringWriter);
-//		t.printStackTrace(writer);
-//		return stringWriter.toString();
-//	}
-	
+
 	private String fName;
 
 	private Vector<Test> fTests= new Vector<Test>(10); // Cannot convert this to List because it is used directly by some test runners
@@ -88,8 +79,8 @@ public class TestSuite implements Test {
 	 * Parts of this method were written at 2337 meters in the Hueffihuette,
 	 * Kanton Uri
 	 */
-	public TestSuite(TestPrototype prototype) {   //final Class<? extends TestCase> theClass) {
-		fName = prototype.getClass().getName();
+	public TestSuite(TestPrototype prototype) { 
+		fName = prototype.getTestClassName();
 		
 		for (String methodName : prototype.getTestMethodNames()) {
 			addTestMethod(methodName, prototype);
@@ -114,8 +105,9 @@ public class TestSuite implements Test {
 //				addTestMethod(each, names, theClass);
 //			superClass= superClass.getSuperclass();
 //		}
-//		if (fTests.size() == 0)
-//			addTest(warning("No tests found in "+theClass.getName()));
+		if (fTests.size() == 0) {
+			addTest(warning("No tests found in " + fName));
+		}
 	}
 	
 	/**
@@ -142,18 +134,16 @@ public class TestSuite implements Test {
 		for (TestPrototype prototype : prototypes) {
 			addTest( new TestSuite(prototype) );
 		} 
-//		for (Class<?> each : classes)
-//			addTest(new TestSuite(each.asSubclass(TestCase.class)));
 	}
 	
 	/**
 	 * Constructs a TestSuite from the given array of classes with the given name.
 	 * @see TestSuite#TestSuite(Class[])
 	 */
-//	public TestSuite(Class<? extends TestCase>[] classes, String name) {
-//		this(classes);
-//		setName(name);
-//	}
+	public TestSuite(TestPrototype[] prototypes, String name) {
+		this(prototypes);
+		setName(name);
+	}
 	
 	/**
 	 * Adds a test to the suite.
