@@ -12,5 +12,5 @@ public interface TestPrototype {
 	
 	interface TestMethod<T extends TestCase> {
 		void invoke(T target);
-	}
+	}	
 }
