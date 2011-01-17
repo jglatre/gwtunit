@@ -153,6 +153,7 @@ public abstract class TestCase extends Assert implements Test, TestPrototype {
 	 * Override to run the test and assert its state.
 	 * @throws Throwable if any exception is thrown
 	 */
+	@SuppressWarnings("unchecked")
 	protected void runTest() throws Throwable {
 		assertNotNull("TestCase.fName cannot be null", fName); // Some VMs crash when calling getMethod(null,null);
 		TestMethod runMethod = getTestMethod(fName);
@@ -167,19 +168,22 @@ public abstract class TestCase extends Assert implements Test, TestPrototype {
 	 */
 	protected void setUp() throws Exception {
 	}
+	
 	/**
 	 * Tears down the fixture, for example, close a network connection.
 	 * This method is called after a test is executed.
 	 */
 	protected void tearDown() throws Exception {
 	}
+	
 	/**
 	 * Returns a string representation of the test case
 	 */
 	@Override
 	public String toString() {
-	    return getName() + "(" + getClass().getName() + ")";
+	    return getName() + "(" + getTestClassName() + ")";
 	}
+	
 	/**
 	 * Gets the name of a TestCase
 	 * @return the name of the TestCase
@@ -187,6 +191,7 @@ public abstract class TestCase extends Assert implements Test, TestPrototype {
 	public String getName() {
 		return fName;
 	}
+	
 	/**
 	 * Sets the name of a TestCase
 	 * @param name the name to set
@@ -197,7 +202,13 @@ public abstract class TestCase extends Assert implements Test, TestPrototype {
 	
 	//----------------------------------------------------------------------------
 
+	private String testClassName;
 	private Map<String, TestMethod<? extends TestCase>> testMethods = new HashMap<String, TestMethod<?>>();
+	
+	
+	public String getTestClassName() {
+		return testClassName;
+	}
 	
 	
 	public TestMethod<? extends TestCase> getTestMethod(String name) {
@@ -211,6 +222,11 @@ public abstract class TestCase extends Assert implements Test, TestPrototype {
 	
 	public TestCase newInstance() {
 		throw new UnsupportedOperationException("Method newInstance() must be overriden");
+	}
+	
+	
+	protected void setTestClassName(String testClassName) {
+		this.testClassName = testClassName;
 	}
 	
 	
