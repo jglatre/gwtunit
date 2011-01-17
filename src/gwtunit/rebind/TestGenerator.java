@@ -16,6 +16,9 @@ import com.google.gwt.user.rebind.SourceWriter;
 
 
 public class TestGenerator extends Generator {
+	
+	private static final String CLASS_SUFFIX = "Extended";
+	
 
 	@Override
 	public String generate(TreeLogger logger, GeneratorContext context,	String typeName) 
@@ -24,7 +27,7 @@ public class TestGenerator extends Generator {
 		try {
 			JClassType type = context.getTypeOracle().getType(typeName);
 			String packageName = type.getPackage().getName();
-			String className = type.getSimpleSourceName() + "Extended";
+			String className = type.getSimpleSourceName() + CLASS_SUFFIX;
 			
 			ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory( packageName, className );
 			composer.setSuperclass( type.getName() );
@@ -39,7 +42,7 @@ public class TestGenerator extends Generator {
 				
 				source.commit( logger );
 			}
-			return type.getParameterizedQualifiedSourceName() + "Extended";
+			return type.getParameterizedQualifiedSourceName() + CLASS_SUFFIX;
 		} 
 		catch (NotFoundException e) {
 			e.printStackTrace();
@@ -50,6 +53,7 @@ public class TestGenerator extends Generator {
 	
 	private void generateConstructor(SourceWriter source, String className, JClassType type) {
 		source.println("public " + className + "() {");
+		source.println("   setTestClassName(\"" + type.getQualifiedSourceName() + "\");");
 		for ( JMethod method : getTestMethods(type) ) {
 			source.println("addTestMethod(\"" + method.getName() + "\", new TestMethod<" + className + ">() {");
 			source.println("   public void invoke(" + className + " target) {");
